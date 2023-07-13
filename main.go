@@ -170,15 +170,16 @@ func menuDisplay(items []Task) {
 	}
 }
 
-func saveTasksToJson(tasks []Task) {
+func saveTasksToJson(tasks []Task) error {
 	file, err := os.Create("tasks.json")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer file.Close()
 
 	// serialize to json
 	json.NewEncoder(file).Encode(tasks)
+	return nil
 }
 
 func loadTasksFromJson() []Task {
