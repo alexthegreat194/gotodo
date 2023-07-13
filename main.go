@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -86,6 +87,7 @@ func menuCheckbox(items []Task) int {
 	}
 }
 
+// menu for selecting options
 func menuSelect(options []string) int {
 	if err := keyboard.Open(); err != nil {
 		panic(err)
@@ -168,13 +170,36 @@ func menuDisplay(items []Task) {
 	}
 }
 
+func saveTasksToJson(tasks []Task) {
+	file, err := os.Create("tasks.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	// serialize to json
+	json.NewEncoder(file).Encode(tasks)
+}
+
+func loadTasksFromJson() []Task {
+	file, err := os.Open("tasks.json")
+	if err != nil {
+		return []Task{}
+	}
+	defer file.Close()
+
+	var tasks []Task
+	// deserialize from json
+	err = json.NewDecoder(file).Decode(&tasks)
+	if err != nil {
+		panic(err)
+	}
+
+	return tasks
+}
 
 func main() {
-	buffer := []Task{ 
-		{Title: "one", Done: false},
-		{Title: "two", Done: false},
-		{Title: "three", Done: false},
-	}
+	buffer := loadTasksFromJson()
 
 	done := false
 	for !done {
@@ -211,7 +236,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(buffer)
+	fmt.Println("Tasks saved to tasks.json...")
 	saveTasksToJson(buffer)
 	return
 }
