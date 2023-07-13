@@ -1,3 +1,4 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/alexthegreat194/gotodo)](https://goreportcard.com/report/github.com/alexthegreat194/gotodo)
 # Gotodo
 
 ### Description
